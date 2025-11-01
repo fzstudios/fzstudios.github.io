@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FZ Studios - Digital Art Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        nav {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid transparent;
+            background: transparent;
+            color: #666;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-tab:hover {
+            color: #1a1a1a;
+            background: #f5f5f5;
+        }
+
+        .filter-tab.active {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .hero {
+            padding: 12rem 3rem 4rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -3px;
+            color: #1a1a1a;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+            font-weight: 300;
+        }
+
+        .gallery {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem 3rem 6rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            grid-auto-rows: 250px;
+        }
+
+        .gallery-card {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .gallery-card:nth-child(6n+1) {
+            border-radius: 200px 20px 20px 20px;
+            grid-row: span 2;
+        }
+
+        .gallery-card:nth-child(6n+2) {
+            border-radius: 20px 20px 200px 20px;
+        }
+
+        .gallery-card:nth-child(6n+3) {
+            border-radius: 20px 200px 20px 20px;
+            grid-row: span 2;
+        }
+
+        .gallery-card:nth-child(6n+4) {
+            border-radius: 20px 20px 20px 200px;
+        }
+
+        .gallery-card:nth-child(6n+5) {
+            border-radius: 150px 20px 150px 20px;
+            grid-row: span 2;
+        }
+
+        .gallery-card:nth-child(6n+6) {
+            border-radius: 20px 150px 20px 150px;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .gallery-card-image {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-card:hover .gallery-card-image img {
+            transform: scale(1.15);
+        }
+
+        .gallery-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .gallery-card:hover .gallery-card-overlay {
+            opacity: 1;
+        }
+
+        .card-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transform: translateY(20px);
+            transition: transform 0.4s ease 0.1s;
+        }
+
+        .gallery-card:hover .card-title {
+            transform: translateY(0);
+        }
+
+        .card-category {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            transform: translateY(20px);
+            transition: transform 0.4s ease 0.15s;
+        }
+
+        .gallery-card:hover .card-category {
+            transform: translateY(0);
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #1a1a1a;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease 0.2s;
+        }
+
+        .gallery-card:hover .view-btn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            padding: 2rem;
+        }
+
+        .popup.active {
+            display: flex;
+        }
+
+        .popup-content {
+            position: relative;
+            max-width: 1400px;
+            width: 100%;
+            max-height: 90vh;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .popup-image-section {
+            background: #f5f5f5;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .popup-image-section img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup-info-section {
+            padding: 4rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .popup-close:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .popup-category-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: #f5f5f5;
+            color: #666;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            align-self: flex-start;
+        }
+
+        .popup-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+            line-height: 1.2;
+        }
+
+        .popup-description {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #666;
+            margin-bottom: 3rem;
+            flex-grow: 1;
+        }
+
+        .popup-details {
+            padding-top: 2rem;
+            border-top: 2px solid #f5f5f5;
+            margin-bottom: 2rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #999;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .signature-section {
+            padding: 2rem;
+            background: #fafafa;
+            border-radius: 20px;
+            text-align: right;
+            margin-top: auto;
+        }
+
+        .signature-label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1a1a1a;
+            font-style: italic;
+        }
+
+        .popup-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .popup-nav:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .popup-prev {
+            left: -30px;
+        }
+
+        .popup-next {
+            right: -30px;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        footer p {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .gallery-card:nth-child(1) { animation-delay: 0.05s; }
+        .gallery-card:nth-child(2) { animation-delay: 0.1s; }
+        .gallery-card:nth-child(3) { animation-delay: 0.15s; }
+        .gallery-card:nth-child(4) { animation-delay: 0.2s; }
+        .gallery-card:nth-child(5) { animation-delay: 0.25s; }
+        .gallery-card:nth-child(6) { animation-delay: 0.3s; }
+        .gallery-card:nth-child(7) { animation-delay: 0.35s; }
+        .gallery-card:nth-child(8) { animation-delay: 0.4s; }
+        .gallery-card:nth-child(9) { animation-delay: 0.45s; }
+        .gallery-card:nth-child(10) { animation-delay: 0.5s; }
+        .gallery-card:nth-child(11) { animation-delay: 0.55s; }
+        .gallery-card:nth-child(12) { animation-delay: 0.6s; }
+
+        @media (max-width: 1200px) {
+            .popup-content {
+                grid-template-columns: 1fr;
+            }
+
+            .popup-image-section {
+                max-height: 50vh;
+            }
+
+            .popup-info-section {
+                padding: 3rem 2rem;
+                max-height: 50vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.5rem;
+                grid-auto-rows: 300px;
+            }
+
+            .gallery-card {
+                grid-row: span 1 !important;
+            }
+
+            .popup-title {
+                font-size: 2rem;
+            }
+
+            .popup-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .popup-prev {
+                left: 10px;
+            }
+
+            .popup-next {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">FZ Studios</div>
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Art Collection</h1>
+        <p>A curated gallery of creative expressions</p>
+    </section>
+
+    <section class="gallery" id="gallery"></section>
+
+    <footer>
+        <p>&copy; 2025 FZ Studios. All rights reserved.</p>
+    </footer>
+
+    <div class="popup" id="popup">
+        <button class="popup-close" id="popup-close">×</button>
+        <button class="popup-nav popup-prev" id="popup-prev">‹</button>
+        <div class="popup-content">
+            <div class="popup-image-section">
+                <img src="" alt="" id="popup-img">
+            </div>
+            <div class="popup-info-section">
+                <span class="popup-category-badge" id="popup-category"></span>
+                <h2 class="popup-title" id="popup-title"></h2>
+                <p class="popup-description" id="popup-description"></p>
+                
+                <div class="popup-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Medium</span>
+                        <span class="detail-value" id="detail-medium"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Year</span>
+                        <span class="detail-value" id="detail-year"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Dimensions</span>
+                        <span class="detail-value" id="detail-dimensions"></span>
+                    </div>
+                </div>
+
+                <div class="signature-section">
+                    <div class="signature-label" id="signature-label"></div>
+                    <div class="signature" id="signature"></div>
+                </div>
+            </div>
+        </div>
+        <button class="popup-nav popup-next" id="popup-next">›</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // ✨ CONFIGURATION - EDIT THIS SECTION ✨
+        // ==========================================
+        
+        // Artist Signature (appears in every popup)
+        const ARTIST_INFO = {
+            name: 'FZ Studios',
+            title: 'Digital Artist'
+        };
+
+        // Your Artworks - Add images with unique metadata per image
+        const ARTWORKS_CONFIG = {
+            'Test': {
+                images: [
+                    {
+                        filename: 'testimage.jpg',
+                        title: 'Test Artwork',
+                        description: 'This is a test artwork showcasing digital creativity.',
+                        medium: 'Digital Art',
+                        year: '2025',
+                        dimensions: '4000 × 3000 px'
+                    }
+                ]
+            }
+        };
+
+        // Default values if metadata is missing
+        const DEFAULTS = {
+            description: 'A stunning piece showcasing creative vision and technical mastery.',
+            medium: 'Digital Art',
+            year: '2025',
+            dimensions: '4000 × 3000 px'
+        };
+
+        // ==========================================
+        // APPLICATION CODE (Don't edit below)
+        // ==========================================
+        
+        const artFolder = 'art/';
+        let artworks = [];
+        let currentFilter = 'all';
+        let currentPopupIndex = 0;
+        let filteredArtworks = [];
+
+        function loadArtworksFromConfig() {
+            const loaded = [];
+            Object.keys(ARTWORKS_CONFIG).forEach(category => {
+                ARTWORKS_CONFIG[category].images.forEach((img, i) => {
+                    const title = img.title || img.filename.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '').replace(/[-_]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    loaded.push({
+                        id: `${category}-${i}`,
+                        title: title,
+                        category: category.toLowerCase(),
+                        image: `${artFolder}${category}/${img.filename}`,
+                        description: img.description || DEFAULTS.description,
+                        medium: img.medium || DEFAULTS.medium,
+                        year: img.year || DEFAULTS.year,
+                        dimensions: img.dimensions || DEFAULTS.dimensions
+                    });
+                });
+            });
+            return loaded;
+        }
+
+        function initializeGallery() {
+            artworks = loadArtworksFromConfig();
+            generateFilterTabs();
+            renderGallery();
+        }
+
+        function generateFilterTabs() {
+            const container = document.getElementById('filter-tabs');
+            container.innerHTML = '<button class="filter-tab active" data-filter="all">All</button>';
+            [...new Set(artworks.map(a => a.category))].forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-tab';
+                btn.dataset.filter = cat;
+                btn.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                container.appendChild(btn);
+            });
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderGallery(tab.dataset.filter);
+                });
+            });
+        }
+
+        function renderGallery(filter = 'all') {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            filteredArtworks = filter === 'all' ? artworks : artworks.filter(a => a.category === filter);
+            if (filteredArtworks.length === 0) {
+                gallery.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1; padding: 4rem;">No artworks found.</p>';
+                return;
+            }
+            filteredArtworks.forEach((art, i) => {
+                const card = document.createElement('div');
+                card.className = 'gallery-card';
+                card.dataset.index = i;
+                card.innerHTML = `
+                    <div class="gallery-card-image">
+                        <img src="${art.image}" alt="${art.title}" onerror="this.src='https://via.placeholder.com/800x600?text=Image+Not+Found'">
+                        <div class="gallery-card-overlay">
+                            <div class="card-title">${art.title}</div>
+                            <div class="card-category">${art.category}</div>
+                            <div class="view-btn">View Artwork</div>
+                        </div>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+            document.querySelectorAll('.gallery-card').forEach(card => {
+                card.addEventListener('click', () => openPopup(parseInt(card.dataset.index)));
+            });
+        }
+
+        const popup = document.getElementById('popup');
+        
+        function openPopup(index) {
+            currentPopupIndex = index;
+            updatePopup();
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup() {
+            popup.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updatePopup() {
+            const art = filteredArtworks[currentPopupIndex];
+            document.getElementById('popup-img').src = art.image;
+            document.getElementById('popup-img').alt = art.title;
+            document.getElementById('popup-title').textContent = art.title;
+            document.getElementById('popup-description').textContent = art.description;
+            document.getElementById('popup-category').textContent = art.category;
+            document.getElementById('detail-medium').textContent = art.medium;
+            document.getElementById('detail-year').textContent = art.year;
+            document.getElementById('detail-dimensions').textContent = art.dimensions;
+            document.getElementById('signature').textContent = ARTIST_INFO.name;
+            document.getElementById('signature-label').textContent = ARTIST_INFO.title;
+        }
+
+        document.getElementById('popup-close').addEventListener('click', closePopup);
+        document.getElementById('popup-prev').addEventListener('click', () => {
+            currentPopupIndex = (currentPopupIndex - 1 + filteredArtworks.length) % filteredArtworks.length;
+            updatePopup();
+        });
+        document.getElementById('popup-next').addEventListener('click', () => {
+            currentPopupIndex = (currentPopupIndex + 1) % filteredArtworks.length;
+            updatePopup();
+        });
+        popup.addEventListener('click', e => { if (e.target === popup) closePopup(); });
+        document.addEventListener('keydown', e => {
+            if (popup.classList.contains('active')) {
+                if (e.key === 'Escape') closePopup();
+                if (e.key === 'ArrowLeft') document.getElementById('popup-prev').click();
+                if (e.key === 'ArrowRight') document.getElementById('popup-next').click();
+            }
+        });
+
+        initializeGallery();
+    </script>
+</body>
+</html>
